@@ -6,14 +6,14 @@ import io.github.paoloboni.binance.common.SpotConfig
 
 import scala.concurrent.duration.DurationInt
 
-object PriceMonitor extends IOApp.Simple {
+object PriceMonitor {
 
   val config = SpotConfig.Default(
     apiKey = "***",
     apiSecret = "***"
   )
 
-  override def run: IO[Unit] =
+  def run: IO[Unit] =
     BinanceClient
       .createSpotClient[IO](config)
       .use { client =>
