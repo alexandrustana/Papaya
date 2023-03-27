@@ -5,7 +5,7 @@ object Papaya extends IOApp {
 
   override def run(args: List[String]): IO[ExitCode] = {
     for {
-      _ <- HistoricalData.run.foreverM
+      _ <- HistoricalData.run
     } yield ExitCode.Success
   }
 
