@@ -21,7 +21,7 @@ object HistoricalData {
     apiSecret = "***"
   )
 
-  val kLineQuery = KLines(symbol = "BTCUSDT", interval = Interval.`4h`, startTime = None, endTime = None, limit = 30)
+  val kLineQuery = KLines(symbol = "BTCUSDT", interval = Interval.`4h`, startTime = None, endTime = None, limit = 50)
   
   def run =
     BinanceClient
