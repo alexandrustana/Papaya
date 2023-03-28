@@ -1,7 +1,10 @@
 package com.papaya.historical.data
 
+import java.time.temporal.{ChronoUnit, TemporalAmount, TemporalUnit}
+
 import cats.effect.IO
 import cats.effect.std.Console
+
 import fs2.Stream
 import io.github.paoloboni.binance.BinanceClient
 import io.github.paoloboni.binance.common.response.CirceResponse
@@ -9,9 +12,8 @@ import io.github.paoloboni.binance.spot.parameters.v3.KLines
 import io.github.paoloboni.binance.common.{Interval, KLine, SpotConfig}
 import io.github.paoloboni.http.QueryParamsConverter.Ops
 import sttp.client3.circe.asJson
-
 import java.time.{Instant, LocalDateTime, ZoneId}
-import scala.concurrent.duration.DurationInt
+import scala.concurrent.duration.{DAYS, DurationInt}
 
 object HistoricalData {
 
@@ -21,7 +23,7 @@ object HistoricalData {
     apiSecret = "***"
   )
 
-  val kLineQuery = KLines(symbol = "BTCUSDT", interval = Interval.`4h`, startTime = None, endTime = None, limit = 50)
+  val kLineQuery = KLines(symbol = "BTCUSDT", interval = Interval.`4h`, startTime = Some(Instant.now().minus(50/6, ChronoUnit.DAYS)), endTime = Some(Instant.now()), limit = 50)
   
   def run =
     BinanceClient
@@ -42,6 +44,7 @@ object HistoricalData {
           println(s"High price: ${kline.high}")
           println(s"Low price: ${kline.low}")
           println(s"Volume: ${kline.volume}")
+          println(s"Volume: ${kline}")
           println("---------------------------------------------------")
         })
         case Left(e) => e
