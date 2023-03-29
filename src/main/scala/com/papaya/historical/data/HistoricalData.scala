@@ -1,10 +1,9 @@
 package com.papaya.historical.data
 
 import java.time.temporal.{ChronoUnit, TemporalAmount, TemporalUnit}
-
 import cats.effect.IO
 import cats.effect.std.Console
-
+import com.papaya.computations.MovingAverage
 import fs2.Stream
 import io.github.paoloboni.binance.BinanceClient
 import io.github.paoloboni.binance.common.response.CirceResponse
@@ -12,6 +11,7 @@ import io.github.paoloboni.binance.spot.parameters.v3.KLines
 import io.github.paoloboni.binance.common.{Interval, KLine, SpotConfig}
 import io.github.paoloboni.http.QueryParamsConverter.Ops
 import sttp.client3.circe.asJson
+
 import java.time.{Instant, LocalDateTime, ZoneId}
 import scala.concurrent.duration.{DAYS, DurationInt}
 
@@ -23,7 +23,7 @@ object HistoricalData {
     apiSecret = "***"
   )
 
-  val kLineQuery = KLines(symbol = "BTCUSDT", interval = Interval.`4h`, startTime = Some(Instant.now().minus(50/6, ChronoUnit.DAYS)), endTime = Some(Instant.now()), limit = 50)
+  val kLineQuery = KLines(symbol = "BTCUSDT", interval = Interval.`4h`, startTime = None, endTime = None, limit = 1000)
   
   def run =
     BinanceClient
@@ -36,7 +36,7 @@ object HistoricalData {
           limiters = client.rateLimiters.requestsOnly
         )
       } map {
-        case Right(value) => value.map(kline => {
+        case Right(value) => value.foreach(kline => {
           println("-------------------- KLine ------------------------")
           println(s"OpenTime: ${LocalDateTime.ofInstant(Instant.ofEpochMilli(kline.openTime), ZoneId.systemDefault())}")
           println(s"ClosingTime: ${LocalDateTime.ofInstant(Instant.ofEpochMilli(kline.closeTime), ZoneId.systemDefault())}")
@@ -47,6 +47,7 @@ object HistoricalData {
           println(s"Volume: ${kline}")
           println("---------------------------------------------------")
         })
+        println(s"EMA: ${MovingAverage.calculateEMA(value, 50)}")
         case Left(e) => e
       }
 //       client.V3.getKLines(kLineQuery)
