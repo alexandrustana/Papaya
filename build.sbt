@@ -23,3 +23,8 @@ libraryDependencies += "co.fs2" %% "fs2-reactive-streams" % "3.6.1"
 libraryDependencies += "co.fs2" %% "fs2-scodec" % "3.6.1"
 
 libraryDependencies += "io.github.paoloboni" %% "binance-scala-client" % "1.6.1"
+
+libraryDependencies ++= Seq(
+  "com.typesafe.slick" %% "slick" % "3.4.1",
+  "org.postgresql" % "postgresql" % "42.5.4"
+)
