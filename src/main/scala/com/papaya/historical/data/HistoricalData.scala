@@ -3,7 +3,7 @@ package com.papaya.historical.data
 import java.time.temporal.{ChronoUnit, TemporalAmount, TemporalUnit}
 import cats.effect.IO
 import cats.effect.std.Console
-import com.papaya.computations.MovingAverage
+import com.papaya.computations.{MovingAverage, RSI}
 import fs2.Stream
 import io.github.paoloboni.binance.BinanceClient
 import io.github.paoloboni.binance.common.response.CirceResponse
@@ -23,7 +23,7 @@ object HistoricalData {
     apiSecret = "***"
   )
 
-  val kLineQuery = KLines(symbol = "BTCUSDT", interval = Interval.`4h`, startTime = None, endTime = None, limit = 1000)
+  val kLineQuery = KLines(symbol = "BTCUSDT", interval = Interval.`1h`, startTime = None, endTime = None, limit = 1000)
   
   def run =
     BinanceClient
@@ -48,6 +48,7 @@ object HistoricalData {
           println("---------------------------------------------------")
         })
         println(s"EMA: ${MovingAverage.calculateEMA(value, 50)}")
+        println(s"RSI: ${RSI.calculateRSI(value.map(_.close.doubleValue), 14)}")
         case Left(e) => e
       }
 //       client.V3.getKLines(kLineQuery)
