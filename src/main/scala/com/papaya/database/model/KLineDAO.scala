@@ -1,10 +1,22 @@
 package com.papaya.database.model
 
+import com.papaya.historical.data.HistoricalModel
 import slick.jdbc.PostgresProfile.api._
 
 import java.time.LocalDateTime
 
-abstract class KLineDAO(tag:Tag) extends Table[(String, LocalDateTime, LocalDateTime, Double, Double, Double, Double, Double)](tag, "historic-data") {
+class KLineDAO(tag:Tag) extends Table[HistoricalModel](tag, None, "historic-data") {
+  override def * = (id, quoteName, openTime, openPrice, highPrice, lowPrice, volume, closingTime, quoteAssetVolume, numberOfTrades, buyBaseAssetVolume, buyQuoteAssetVolume) <> (HistoricalModel.tupled, HistoricalModel.unapply)
   def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
-  def name = column[String]("name")
+  def quoteName = column[String]("quote_name")
+  def openTime = column[LocalDateTime]("open_time")
+  def openPrice = column[BigDecimal]("open_price")
+  def highPrice = column[BigDecimal]("high_price")
+  def lowPrice = column[BigDecimal]("low_price")
+  def volume = column[BigDecimal]("volume")
+  def closingTime = column[LocalDateTime]("closing_time")
+  def quoteAssetVolume = column[BigDecimal]("quote_asset_volume")
+  def numberOfTrades = column[Int]("number_of_trades")
+  def buyBaseAssetVolume = column[BigDecimal]("buy_base_asset_volume")
+  def buyQuoteAssetVolume = column[BigDecimal]("buy_quote_asset_volume")
 }

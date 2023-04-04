@@ -28,3 +28,5 @@ libraryDependencies ++= Seq(
   "com.typesafe.slick" %% "slick" % "3.4.1",
   "org.postgresql" % "postgresql" % "42.5.4"
 )
+
+libraryDependencies += "com.typesafe" % "config" % "1.4.2"
