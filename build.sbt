@@ -26,7 +26,8 @@ libraryDependencies += "io.github.paoloboni" %% "binance-scala-client" % "1.6.1"
 
 libraryDependencies ++= Seq(
   "com.typesafe.slick" %% "slick" % "3.4.1",
-  "org.postgresql" % "postgresql" % "42.5.4"
+  "org.postgresql" % "postgresql" % "42.5.4",
+  "com.typesafe.slick" %% "slick-hikaricp" % "3.4.1",
 )
 
 libraryDependencies += "com.typesafe" % "config" % "1.4.2"

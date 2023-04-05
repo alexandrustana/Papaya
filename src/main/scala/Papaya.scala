@@ -1,7 +1,5 @@
 import cats.effect.{ExitCode, IO, IOApp}
-import com.papaya.database.model.KLineDAO
 import com.papaya.historical.data.HistoricalData
-import slick.lifted.TableQuery
 
 object Papaya extends IOApp {
 

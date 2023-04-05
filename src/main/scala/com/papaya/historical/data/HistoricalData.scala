@@ -2,19 +2,17 @@ package com.papaya.historical.data
 
 import cats.effect.IO
 import com.papaya.computations.{MovingAverage, RSI}
-import com.papaya.database.model.KLineDAO
-import com.papaya.historical.data.HistoricalModel.toHistoricalModel
-import com.papaya.settings.Configuration
+import com.papaya.database.model.Psql
 import io.github.paoloboni.binance.BinanceClient
 import io.github.paoloboni.binance.common.response.CirceResponse
 import io.github.paoloboni.binance.spot.parameters.v3.KLines
 import io.github.paoloboni.binance.common.{Interval, KLine, SpotConfig}
 import io.github.paoloboni.http.QueryParamsConverter.Ops
-import slick.dbio.DBIO
-import slick.lifted.TableQuery
 import sttp.client3.circe.asJson
 
 import java.time.{Instant, LocalDateTime, ZoneId}
+import scala.concurrent.Await
+import scala.concurrent.duration.{Duration, DurationInt}
 
 object HistoricalData {
 
@@ -50,15 +48,8 @@ object HistoricalData {
         })
         println(s"EMA: ${MovingAverage.calculateEMA(value, 50)}")
         println(s"RSI: ${RSI.calculateRSI(value.map(_.close.doubleValue), 14)}")
-          var klineTable = TableQuery[KLineDAO]
-          val insertPlayerQuery = klineTable += toHistoricalModel(value.last).toString
-          DBIO.seq(insertPlayerQuery)
-          Configuration.getDbConfiguration.run(insertPlayerQuery)
+          Await.result(Psql.insertKline(value.last, "BTCUSDT"), 10.seconds)
         case Left(e) => e
       }
-//       client.V3.getKLines(kLineQuery)
-//         .evalMap(kline => Console[IO].print(s"This is it!: + ${kline}"))
-//         .compile
-//         .drain
       }
 }

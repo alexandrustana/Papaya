@@ -1,7 +1,6 @@
 package com.papaya.settings
 
-import slick.jdbc.JdbcBackend.Database
-
+import slick.jdbc.PostgresProfile.api._
 
 object Configuration {
 
@@ -9,5 +8,5 @@ object Configuration {
   
   def getSpotConfiguration: SpotConfiguration = appConfig.spotConfiguration
 
-  def getDbConfiguration = Database.forConfig("postgres")
+  def db = Database.forConfig("postgres")
 }
