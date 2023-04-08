@@ -25,6 +25,7 @@ object Psql {
       openPrice = kline.open,
       highPrice = kline.high,
       lowPrice = kline.low,
+      closePrice = kline.close,
       volume = kline.volume,
       closingTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(kline.closeTime),  ZoneId.systemDefault()),
       quoteAssetVolume = kline.quoteAssetVolume,

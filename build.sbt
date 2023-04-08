@@ -30,4 +30,5 @@ libraryDependencies ++= Seq(
   "com.typesafe.slick" %% "slick-hikaricp" % "3.4.1",
 )
 
-libraryDependencies += "com.typesafe" % "config" % "1.4.2"
+libraryDependencies += "com.github.pureconfig" %% "pureconfig" % "0.17.2"
+libraryDependencies += "com.github.pureconfig" %% "pureconfig-cats-effect" % "0.17.2"

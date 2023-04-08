@@ -14,6 +14,7 @@ case class HistoricalModel(
       openPrice: BigDecimal,
       highPrice: BigDecimal,
       lowPrice: BigDecimal,
+      closePrice: BigDecimal,
       volume: BigDecimal,
       closingTime: LocalDateTime,
       quoteAssetVolume: BigDecimal,
