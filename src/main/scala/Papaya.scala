@@ -1,4 +1,5 @@
 import cats.effect.{ExitCode, IO, IOApp}
+import com.papaya.binance.client.BClient
 import com.papaya.historical.data.HistoricalData
 import com.papaya.settings.Configuration
 
@@ -9,7 +10,8 @@ object Papaya extends IOApp {
     for {
       _ <- IO(println("Server is starting!"))
       loaded <- Configuration.loadConfiguration
-      _ <- HistoricalData.run(loaded)
+      client <- BClient(loaded)
+      _ <- HistoricalData.run(client, loaded)
     } yield ExitCode.Success
   }
 
