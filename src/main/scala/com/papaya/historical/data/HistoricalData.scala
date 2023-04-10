@@ -25,18 +25,12 @@ object HistoricalData {
     uri = spotConfig.restBaseUrl.addPath("api", "v3").addPath("klines").addParams(kLineQuery.toQueryParams)
     kLinesResponse <- bClient.spotApi
       .use { client =>
-      client.client.get[CirceResponse[List[KLine]]](
+        client.client.get[CirceResponse[List[KLine]]](
           uri = uri,
           responseAs = asJson[List[KLine]],
           limiters = client.rateLimiters.requestsOnly)
       }
-//       map {
-//        case Right(value) =>
-//        println(s"EMA: ${MovingAverage.calculateEMA(value, 50).last}")
-//        println(s"RSI: ${RSI.calculateRSI(value.map(_.close.doubleValue), 14).last}")
-//          Await.result(Psql.insertKline(value.last, "BTCUSDT"), 10.seconds)
-//        case Left(e) => e
-      } yield {
+  } yield {
     println(s"EMA: ${MovingAverage.calculateEMA(kLinesResponse.getOrElse(List.empty), 50).last}")
     println(s"RSI: ${RSI.calculateRSI(kLinesResponse.getOrElse(List.empty).map(_.close.doubleValue), 14).last}")
   }
