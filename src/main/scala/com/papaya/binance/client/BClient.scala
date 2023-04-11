@@ -11,6 +11,8 @@ import io.github.paoloboni.binance.spot.parameters.v3.KLines
 import io.github.paoloboni.http.QueryParamsConverter.Ops
 import sttp.client3.circe.asJson
 
+import java.time.{LocalDateTime, ZoneOffset}
+
 case class BClient(spotApi: Client)
 
 object BClient {
@@ -37,6 +39,34 @@ object BClient {
           apiKey = appConfig.spotConfiguration.map(_.apiKey).getOrElse("***"),
           apiSecret = appConfig.spotConfiguration.map(_.apiSecret).getOrElse("***")))
   } yield config
+
+  def getHistoricData(
+      api: Client,
+      config: SpotConfig,
+      name: String,
+      startDate: LocalDateTime,
+      endDate: LocalDateTime,
+      interval: Interval = Interval.`1h`,
+      limitSize: Int = 1000) = {
+    val uri = config.restBaseUrl
+      .addPath("api", "v3")
+      .addPath("klines")
+      .addParams(
+        KLines(
+          symbol = name,
+          interval = interval,
+          startTime = Some(startDate.toInstant(ZoneOffset.UTC)),
+          endTime = Some(endDate.toInstant(ZoneOffset.UTC)),
+          limit = limitSize).toQueryParams)
+    api
+      .use { client =>
+        client.client.get[CirceResponse[List[KLine]]](
+          uri = uri,
+          responseAs = asJson[List[KLine]],
+          limiters = client.rateLimiters.requestsOnly)
+      }
+      .map(v => v.getOrElse(List.empty))
+  }
 
   def getGetDefaultHistoricData(
       api: Client,

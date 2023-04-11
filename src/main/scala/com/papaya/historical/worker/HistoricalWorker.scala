@@ -1,28 +1,41 @@
 package com.papaya.historical.worker
 
+import cats.effect.IO
+import cats.effect.unsafe.implicits.global
 import com.papaya.binance.client.BClient
-
 import com.papaya.database.Psql
 import com.papaya.settings.AppConfig
+import io.github.paoloboni.binance.common.{Interval, SpotConfig}
 
-import io.github.paoloboni.binance.common.Interval
-import io.github.paoloboni.binance.spot.parameters.v3.KLines
-
-import scala.concurrent.ExecutionContext.Implicits.global
+import java.util.concurrent.TimeUnit
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, Future}
 
 object HistoricalWorker {
 
   val QUOTE_NAME = "BTCUSDT"
-
+  implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
 
   // check historical database, get last saved value for the specified currency
   // save the delta into the database
   // apply strategy?
   //
   def run(bClient: BClient, config: AppConfig) = for {
-    lastModel <- Psql.getLastKline(QUOTE_NAME)
-    _ <- if(lastModel.empty)
-          BClient.
-  }
+    lastModel <- IO(
+      Await.result(Psql.getLastKline(QUOTE_NAME).map(_.head), Duration(10, TimeUnit.SECONDS)))
+    spotConfig =
+      SpotConfig
+        .Default(config.spotConfiguration.get.apiKey, config.spotConfiguration.get.apiSecret)
+    deltaKLines <-
+      BClient
+        .getHistoricData(
+          bClient.spotApi,
+          spotConfig,
+          lastModel.quoteName,
+          lastModel.openTime,
+          lastModel.closingTime)
+    r <- IO(
+      Await.result(Psql.insertData(deltaKLines, QUOTE_NAME), Duration(10, TimeUnit.SECONDS)))
+  } yield r
 
 }

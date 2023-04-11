@@ -1,7 +1,10 @@
 import cats.effect.{ExitCode, IO, IOApp}
 import com.papaya.binance.client.BClient
-import com.papaya.historical.worker.HistoricalData
+import com.papaya.historical.worker.HistoricalWorker
 import com.papaya.settings.Configuration
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 object Papaya extends IOApp {
 
@@ -11,8 +14,10 @@ object Papaya extends IOApp {
       _ <- IO(println("Server is starting!"))
       loaded <- Configuration.loadConfiguration
       client <- BClient(loaded)
-      _ <- HistoricalData.run(client, loaded)
-    } yield ExitCode.Success
+      _ <- HistoricalWorker.run(client, loaded)
+    } yield {
+      ExitCode.Success
+    }
   }
 
 }

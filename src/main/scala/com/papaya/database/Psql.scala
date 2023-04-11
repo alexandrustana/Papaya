@@ -18,6 +18,12 @@ object Psql {
     Configuration.db.run(insertQuery)
   }
 
+  def insertData(kLines: List[KLine], name: String): Future[Option[Int]] = {
+    val insertQuery =
+      SlickTables.historicTable ++= kLines.map(kLine => toHistoricalModel(kLine, name))
+    Configuration.db.run(insertQuery)
+  }
+
   def toHistoricalModel(kline: KLine, name: String) = {
     HistoricalModel(
       id = 0,
@@ -40,7 +46,7 @@ object Psql {
   def getLastKline(name: String): Future[Seq[HistoricalModel]] = {
     implicit val getResultMovie: GetResult[HistoricalModel] = GetResult(r =>
       HistoricalModel(
-        r.<<,
+        0,
         r.<<,
         LocalDateTime.parse(r.nextString()),
         r.<<,
@@ -53,10 +59,10 @@ object Psql {
         r.<<,
         r.<<,
         r.<<))
-    val historicQuery =
-      sql"""SELECT * FROM public.historic-prices where quote_name = $name ORDER BY closing_time DESC LIMIT 1"""
-        .as[HistoricalModel]
-    Configuration.db.run(historicQuery)
+//    val historicQuery =
+//      sql"""SELECT * FROM historic-prices where quote_name = $name ORDER BY closing_time DESC LIMIT 1"""
+//        .as[HistoricalModel]
+    Configuration.db.run(SlickTables.historicTable.result)
   }
 
 }
