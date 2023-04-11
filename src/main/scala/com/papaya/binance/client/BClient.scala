@@ -21,6 +21,4 @@ object BClient {
         apiSecret = appConfig.spotConfiguration.map(_.apiSecret).getOrElse("***")))
   } yield config
 
-//  def runClient(config: SpotConfig) =   BinanceClient
-//    .createSpotClient[IO](config)
 }
