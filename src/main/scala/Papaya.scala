@@ -1,6 +1,6 @@
 import cats.effect.{ExitCode, IO, IOApp}
 import com.papaya.binance.client.BClient
-import com.papaya.historical.data.HistoricalData
+import com.papaya.historical.worker.HistoricalData
 import com.papaya.settings.Configuration
 
 object Papaya extends IOApp {

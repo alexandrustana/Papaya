@@ -1,7 +1,5 @@
 package com.papaya.historical.data
 
-import io.github.paoloboni.binance.common.KLine
-
 import java.time.{Instant, LocalDateTime, ZoneId}
 import scala.language.implicitConversions
 
