@@ -3,6 +3,7 @@ package com.papaya.database.model
 import com.papaya.historical.data.HistoricalModel
 import slick.jdbc.PostgresProfile
 
+import java.sql.Timestamp
 import java.time.LocalDateTime
 
 class SlickTablesGeneric(val profile: PostgresProfile) {
@@ -10,13 +11,27 @@ class SlickTablesGeneric(val profile: PostgresProfile) {
   import profile.api._
 
   class KLineDAO(tag: Tag) extends Table[HistoricalModel](tag, None, "historic-prices") {
-    override def * = (id, quoteName, openTime, openPrice, highPrice, lowPrice, closePrice, volume, closingTime, quoteAssetVolume, numberOfTrades, buyBaseAssetVolume, buyQuoteAssetVolume) <> (HistoricalModel.tupled, HistoricalModel.unapply)
+
+    override def * = (
+      id,
+      quoteName,
+      openTime,
+      openPrice,
+      highPrice,
+      lowPrice,
+      closePrice,
+      volume,
+      closingTime,
+      quoteAssetVolume,
+      numberOfTrades,
+      buyBaseAssetVolume,
+      buyQuoteAssetVolume) <> (HistoricalModel.tupled, HistoricalModel.unapply)
 
     def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
 
     def quoteName = column[String]("quote_name")
 
-    def openTime = column[LocalDateTime]("open_time")
+    def openTime = column[Timestamp]("open_time")
 
     def openPrice = column[BigDecimal]("open_price")
 
@@ -28,7 +43,7 @@ class SlickTablesGeneric(val profile: PostgresProfile) {
 
     def volume = column[BigDecimal]("volume")
 
-    def closingTime = column[LocalDateTime]("closing_time")
+    def closingTime = column[Timestamp]("closing_time")
 
     def quoteAssetVolume = column[BigDecimal]("quote_asset_volume")
 
@@ -38,4 +53,5 @@ class SlickTablesGeneric(val profile: PostgresProfile) {
 
     def buyQuoteAssetVolume = column[BigDecimal]("buy_quote_asset_volume")
   }
+
 }
