@@ -13,7 +13,6 @@ class SlickTablesGeneric(val profile: PostgresProfile) {
   class KLineDAO(tag: Tag) extends Table[HistoricalModel](tag, None, "historic-prices") {
 
     override def * = (
-      id,
       quoteName,
       openTime,
       openPrice,
@@ -26,8 +25,6 @@ class SlickTablesGeneric(val profile: PostgresProfile) {
       numberOfTrades,
       buyBaseAssetVolume,
       buyQuoteAssetVolume) <> (HistoricalModel.tupled, HistoricalModel.unapply)
-
-    def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
 
     def quoteName = column[String]("quote_name")
 
@@ -52,6 +49,8 @@ class SlickTablesGeneric(val profile: PostgresProfile) {
     def buyBaseAssetVolume = column[BigDecimal]("buy_base_asset_volume")
 
     def buyQuoteAssetVolume = column[BigDecimal]("buy_quote_asset_volume")
+
+    def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
   }
 
 }

@@ -7,7 +7,6 @@ import scala.language.implicitConversions
 //candlestick
 //https://www.investopedia.com/trading/candlestick-charting-what-is-it/
 case class HistoricalModel(
-    id: Int,
     quoteName: String,
     openTime: Timestamp,
     openPrice: BigDecimal,

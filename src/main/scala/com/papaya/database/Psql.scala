@@ -21,7 +21,6 @@ object Psql {
 
   def toHistoricalModel(kline: KLine, name: String) = {
     HistoricalModel(
-      id = 0,
       quoteName = name,
       openTime = Timestamp.from(Instant.ofEpochMilli(kline.openTime)),
       openPrice = kline.open,
@@ -44,8 +43,8 @@ object Psql {
 
   def getLastKline(name: String): Future[Seq[HistoricalModel]] = {
     implicit val getResultMovie: GetResult[HistoricalModel] = GetResult(r =>
-      HistoricalModel(0, r.<<, r.<<, r.<<, r.<<, r.<<, r.<<, r.<<, r.<<, r.<<, r.<<, r.<<, r.<<))
-    Configuration.db.run(SlickTables.historicTable.result)
+      HistoricalModel(r.<<, r.<<, r.<<, r.<<, r.<<, r.<<, r.<<, r.<<, r.<<, r.<<, r.<<, r.<<))
+    Configuration.db.run(SlickTables.historicTable.filter(_.quoteName === name).result)
   }
 
 }
