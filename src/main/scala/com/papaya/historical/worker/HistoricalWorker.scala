@@ -32,7 +32,6 @@ object HistoricalWorker {
           bClient.spotApi,
           spotConfig,
           lastModel.quoteName,
-          lastModel.openTime.toLocalDateTime,
           lastModel.closingTime.toLocalDateTime)
     r <- IO(
       Await.result(Psql.insertData(deltaKLines, QUOTE_NAME), Duration(10, TimeUnit.SECONDS)))

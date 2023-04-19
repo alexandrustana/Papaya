@@ -44,20 +44,18 @@ object BClient {
       api: Client,
       config: SpotConfig,
       name: String,
-      startDate: LocalDateTime,
       endDate: LocalDateTime,
       interval: Interval = Interval.`1h`,
       limitSize: Int = 1000) = {
     val uri = config.restBaseUrl
       .addPath("api", "v3")
       .addPath("klines")
-      .addParams(
-        KLines(
-          symbol = name,
-          interval = interval,
-          startTime = Some(startDate.toInstant(ZoneOffset.UTC)),
-          endTime = Some(endDate.toInstant(ZoneOffset.UTC)),
-          limit = limitSize).toQueryParams)
+      .addParams(KLines(
+        symbol = name,
+        interval = interval,
+        startTime = Some(endDate.toInstant(ZoneOffset.UTC)),
+        endTime = Some(LocalDateTime.now().toInstant(ZoneOffset.UTC)),
+        limit = limitSize).toQueryParams)
     api
       .use { client =>
         client.client.get[CirceResponse[List[KLine]]](

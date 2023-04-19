@@ -45,9 +45,6 @@ object Psql {
   def getLastKline(name: String): Future[Seq[HistoricalModel]] = {
     implicit val getResultMovie: GetResult[HistoricalModel] = GetResult(r =>
       HistoricalModel(0, r.<<, r.<<, r.<<, r.<<, r.<<, r.<<, r.<<, r.<<, r.<<, r.<<, r.<<, r.<<))
-//    val historicQuery =
-//      sql"""SELECT * FROM historic-prices where quote_name = $name ORDER BY closing_time DESC LIMIT 1"""
-//        .as[HistoricalModel]
     Configuration.db.run(SlickTables.historicTable.result)
   }
 
