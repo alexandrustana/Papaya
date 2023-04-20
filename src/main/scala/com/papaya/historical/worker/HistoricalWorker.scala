@@ -18,7 +18,7 @@ object HistoricalWorker {
   val QUOTE_NAME = "BTCUSDT"
   implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
 
-  def run(bClient: BClient, config: AppConfig) = for {
+  def startUp(bClient: BClient, config: AppConfig) = for {
     lastModel <- IO(
       Await
         .result(Psql.getLastKline(QUOTE_NAME).map(_.headOption), Duration(10, TimeUnit.SECONDS)))

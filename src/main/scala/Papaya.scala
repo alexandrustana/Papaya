@@ -14,7 +14,7 @@ object Papaya extends IOApp {
       _ <- IO(println("Server is starting!"))
       loaded <- Configuration.loadConfiguration
       client <- BClient(loaded)
-      _ <- HistoricalWorker.run(client, loaded)
+      _ <- HistoricalWorker.startUp(client, loaded)
     } yield {
       ExitCode.Success
     }
